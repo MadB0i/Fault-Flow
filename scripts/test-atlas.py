@@ -31,6 +31,13 @@ def ready(page):
 def scan(page, label):
     overflow = page.evaluate("document.documentElement.scrollWidth > innerWidth")
     assert not overflow, label + ": horizontal overflow"
+    if page.viewport_size["width"] == 390 and page.locator(".flow-section").count():
+        canvas = page.get_by_test_id("terrain-canvas").bounding_box()
+        navigation = page.locator(".map-navigation").bounding_box()
+        section = page.locator(".flow-section").bounding_box()
+        assert navigation["y"] >= canvas["y"], label + ": navigation above map"
+        assert navigation["y"] + navigation["height"] <= canvas["y"] + canvas["height"], label + ": navigation outside map"
+        assert navigation["y"] + navigation["height"] <= section["y"], label + ": navigation covers section readouts"
     page.add_script_tag(path=str(ROOT / "node_modules/axe-core/axe.min.js"))
     results = page.evaluate("""async () => (await axe.run(document, {
         runOnly: {type: 'tag', values: ['wcag2a','wcag2aa','wcag21aa','wcag22aa']}

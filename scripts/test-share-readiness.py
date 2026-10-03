@@ -61,6 +61,7 @@ with sync_playwright() as p:
             page.wait_for_load_state('networkidle')
             strings = page.evaluate(f"async () => (await import('/src/shared/i18n/atlas.ts')).ATLAS_COPY.{language}")
             expect(page.get_by_test_id('scenario-play')).to_be_enabled(timeout=60000)
+            expect(page.get_by_test_id('app')).to_have_attribute('lang',language)
             assert page.locator('[data-showcase]').count()==0, 'Replay forced on initial visit'
             assert page.get_by_test_id('scenario-play').bounding_box()['y'] < (844 if width==390 else 900)
             page.screenshot(path=str(OUT/f'first-{width}-{language}.png'),full_page=True)

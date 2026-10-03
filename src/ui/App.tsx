@@ -415,6 +415,7 @@ export default function App() {
   return (
     <div
       className={`atlas-app${focus ? ' is-focused' : ''}`}
+      lang={locale}
       data-mode={mode}
       data-locale={locale}
       data-testid="app"

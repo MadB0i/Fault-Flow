@@ -1424,6 +1424,13 @@
     bottom: auto;
     transform: translateY(-100%);
   }
+  .atlas-map:has(.flow-section) .map-navigation {
+    top: calc(
+      var(--atlas-mobile-map) - var(--space-2xl) - var(--control-size) - var(--space-m)
+    );
+    bottom: auto;
+    transform: translateY(-100%);
+  }
 }
 
 /* Final exploration tools share the atlas's hairlines and compact data rhythm. */
