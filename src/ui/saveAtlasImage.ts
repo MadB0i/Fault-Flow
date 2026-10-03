@@ -1,6 +1,7 @@
 import type { Mode } from '../shared/types.js';
 import type { AtlasCopy } from '../shared/i18n/atlas.js';
 import { GEOLOGY_SOURCE } from '../shared/flood-history.js';
+import { ATLAS_URL } from '../shared/site.js';
 
 export function downloadImage(png: string, filename: string) {
   const link = document.createElement('a');
@@ -15,6 +16,7 @@ export async function createAtlasStory(
   mode: Mode,
   copy: AtlasCopy,
   context: { title: string; attribution: string; note: string; height: string },
+  format: 'portrait' | 'landscape' = 'portrait',
 ): Promise<string> {
   await document.fonts.ready;
   const img = new Image();
@@ -22,6 +24,7 @@ export async function createAtlasStory(
   await img.decode();
   const style = getComputedStyle(document.documentElement);
   const token = (name: string) => style.getPropertyValue(name).trim();
+  if (format === 'landscape') return createLandscapeCard(img, mode, copy, context, token);
   const canvas = document.createElement('canvas');
   canvas.width = 1080;
   canvas.height = 1920;
@@ -115,6 +118,90 @@ export async function createAtlasStory(
     .filter(Boolean)
     .join(' ');
   text(credits, 72, Math.max(y + 16, 1672), 18, token('--text-muted'), 936, 25);
+  text(ATLAS_URL.replace('https://', ''), 72, 1880, 20, accent);
+  return canvas.toDataURL('image/png');
+}
+
+/** The entire captured viewport, fitted rather than cropped; credits are baked into the PNG. */
+function createLandscapeCard(
+  image: HTMLImageElement,
+  mode: Mode,
+  copy: AtlasCopy,
+  context: { title: string; attribution: string; note: string; height: string },
+  token: (name: string) => string,
+) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1200;
+  canvas.height = 630;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Canvas unavailable');
+  const accent = token(mode === 'flow' ? '--water' : '--seismic-amber');
+  const write = (
+    value: string,
+    x: number,
+    y: number,
+    width: number,
+    size: number,
+    color: string,
+    display = false,
+    bottom = Infinity,
+  ) => {
+    ctx.fillStyle = color;
+    let lines: string[] = [];
+    // Fit dense bilingual context into its reserved column, preserving all words.
+    do {
+      ctx.font = `${size}px ${token(display ? '--font-display' : '--font-ui')}`;
+      lines = [];
+      let line = '';
+      for (const word of value.split(/\s+/)) {
+        const next = line ? `${line} ${word}` : word;
+        if (line && ctx.measureText(next).width > width) {
+          lines.push(line);
+          line = word;
+        } else line = next;
+      }
+      if (line) lines.push(line);
+      if (y + lines.length * size * 1.4 <= bottom || size <= 12) break;
+      size -= 1;
+    } while (size >= 12);
+    lines.forEach((line, i) => ctx.fillText(line, x, y + i * size * 1.4));
+    return y + lines.length * size * 1.4;
+  };
+  ctx.fillStyle = token('--bg');
+  ctx.fillRect(0, 0, 1200, 630);
+  ctx.fillStyle = accent;
+  ctx.fillRect(32, 24, 48, 4);
+  write('Fault & Flow', 32, 76, 720, 40, token('--text'), true);
+  write(`${copy.flow} · ${copy.fault}`, 32, 104, 720, 16, accent);
+  ctx.fillStyle = token('--sky-low');
+  ctx.fillRect(32, 128, 720, 312);
+  const scale = Math.min(720 / image.width, 312 / image.height);
+  ctx.drawImage(
+    image,
+    32 + (720 - image.width * scale) / 2,
+    128 + (312 - image.height * scale) / 2,
+    image.width * scale,
+    image.height * scale,
+  );
+  let y = write(context.title, 800, 160, 368, 32, token('--text'), true, 240);
+  y = write(copy[mode], 800, y + 16, 368, 18, accent);
+  y = write(context.note, 800, y + 16, 368, 16, token('--text-muted'), false, 368);
+  write(context.height, 32, 466, 720, 14, token('--text-muted'));
+  write(copy.disclaimer, 32, 494, 1136, 14, accent);
+  const credits =
+    mode === 'plates'
+      ? `${copy.geologySource} · ${GEOLOGY_SOURCE}`
+      : `${context.attribution} ${copy.riverCredit} ${mode === 'fault' ? copy.usgsCredit : ''} © OpenStreetMap contributors · ODbL · openstreetmap.org/copyright`;
+  write(credits, 32, 526, 1136, 12, token('--text-muted'));
+  write(ATLAS_URL.replace('https://', ''), 800, 76, 368, 16, accent);
+  // The same permanent honesty framing as the portrait, kept near the selected context.
+  const limit =
+    mode === 'fault'
+      ? copy.noPrediction
+      : mode === 'flow'
+        ? copy.scenarioNote
+        : copy.platesNote;
+  write(limit, 800, Math.max(y + 8, 392), 368, 13, token('--text-muted'), false, 446);
   return canvas.toDataURL('image/png');
 }
 

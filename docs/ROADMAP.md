@@ -286,7 +286,8 @@ Screenshots now show all three modes at 1440px and 390px in both languages.
 Remaining: riverbed bathymetry and independent terrain validation; bank erosion;
 historical flood footprints; physical-device performance; measured plate boundary,
 convergence rates and the geographic fly-down opener; Assamese native-speaker
-review; public deployment. No live alert service has been added.
+review. Public deployment was completed in v0.2.0 (see below). No live alert service
+has been added.
 
 ## Final release preparation — 2026-10-03
 
@@ -295,8 +296,43 @@ assets. FLOW/FAULT remain primary; PLATES is now a secondary educational explain
 Clickable source records, magnitude filtering, district context, same-camera dry
 terrain/scenario comparison, display-only Lite mode, an optional paced tour and
 local portrait WebM recording are included. Reproducible release captures and a
-professional README prepare the repository for a later GitHub push.
+professional README were published with v0.2.0 on GitHub and GitHub Pages.
 
-Public publishing, physical Android performance, native-speaker Assamese review,
+Physical Android performance, native-speaker Assamese review,
 manual screen-reader review, measured bathymetry, erosion and local hazard layers
 remain outside the completed release preparation. No prediction feature is added.
+
+## Published v0.2.0 and local share-readiness pass — 2026-10-03
+
+The [live atlas](https://madb0i.github.io/Fault-and-Flow/) and
+[v0.2.0 release](https://github.com/MadB0i/Fault-and-Flow/releases/tag/v0.2.0)
+are public. Static deployment, About/topics, release GIF and screenshots are
+completed; phase-8 headless capture and performance-budget goals remain separate
+work.
+
+The subsequent local pass adds canonical/social metadata, app icons, a real-render
+preview, an optional engine-driven showcase, a landscape share card and mobile
+rotation checks. At this dated review, these changes awaited owner approval before
+a push, tag or release.
+See [share readiness](SHARE_READINESS.md). The scientific and physical-device
+gaps listed above remain open.
+
+## Current release — v0.3.0
+
+Publication was approved on 2026-10-04 from corrected candidate `1dff130`.
+The optional Assam → chosen water scenario → recorded earthquake showcase,
+portrait/landscape cards, social preview, comparison/mobile/bilingual improvements
+and production preview/depth/Assamese semantics fixes are included. This remains
+an educational sandbox, not a forecast, hazard map or prediction tool.
+
+The candidate passes **183 unit tests across 19 files**, **64 core browser checks**,
+**28 share/showcase checks**, **26 screenshot layout/axe checks**, **14 release
+checks** and eight DEM landmark assertions. The README GIF has **34 captured
+frames and 27 encoded frames**. See [share readiness](SHARE_READINESS.md) for the
+audit and remaining physical-device, assistive-technology, Assamese and
+social-cache checks. Historical v0.2.0 notes above remain unchanged in meaning.
+
+Release delivery requires a successful exact-merge Pages deployment and public
+app/asset/direct-link verification before tagging and publication. Delivery
+status is recorded in [Actions](https://github.com/MadB0i/Fault-and-Flow/actions/workflows/deploy.yml)
+and [GitHub releases](https://github.com/MadB0i/Fault-and-Flow/releases).

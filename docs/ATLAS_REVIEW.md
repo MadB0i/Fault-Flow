@@ -6,6 +6,11 @@ identity; the bottom dock holds the scenario or timeline action. The mobile layo
 keeps the map above its controls. Evidence is in `docs/screenshots/` at 1440 × 900
 and 390 × 844, with all three modes in both languages.
 
+Current release: **v0.3.0**, approved on 2026-10-04 from corrected candidate
+`1dff130`. The dated delivery notes below preserve the historical v0.2.0 review.
+[Share readiness](SHARE_READINESS.md) records current verification and the
+required public deployment checks before tagging and publication.
+
 ## Confirmed defects fixed
 
 - **P1 — artificial water creation:** clamped incoming flux at the simulation
@@ -223,3 +228,43 @@ physical-phone performance. Existing decorative terrain/deep-water contrast
 exceptions and build-size warnings remain documented; no palette adjustment was
 made in this pass. One transient browser execution-context/navigation interruption
 was followed by a clean full core-suite run with the application sources stable.
+
+## Share-readiness follow-up
+
+The audit found a vague opening, absent social metadata/icons, a full-height
+comparison line intersecting HUD content, no landscape card/return URL and stale
+deployment wording. The opening now identifies Assam's flood scenarios and
+recorded earthquake history. A deliberately optional engine-driven introduction
+provides a camera, water comparison and history sequence, with explicit chosen
+settings, pause/skip/replay and manual reduced-motion steps.
+
+Actual desktop/phone English and Assamese pixels show the comparison labels and
+handle clear of the introductory panel and map controls. The focus ring is on
+the thumb. Showcase panels sit above the divider; loading disables Next until
+the required terrain is prepared. Portrait and landscape cards preserve context,
+scientific limits, source attribution and the return URL; text bounds are measured
+in the real browser. Short landscape phones use a taller scrollable map so
+navigation does not obscure the earthquake heading.
+
+The existing fonts, tokens and engine contract remain. At the 2026-10-03 review,
+new metadata/icons and the preview were local assets pending deployment. The preview uses real terrain,
+a chosen 6 m water scenario and recorded history through 1950. Physical iPhone
+Safari/Android Chrome, manual assistive technology and native Assamese review
+remain pending; the explicit matrix is in the share-readiness document.
+
+## v0.3.0 release-candidate audit — 2026-10-04
+
+Corrected candidate `1dff130` fixes production preview base paths, mobile
+depth/navigation overlap and Assamese root semantics. No redesign or additional
+feature was included in these fixes. Verification passes **183 unit tests across
+19 files**, **64 core browser checks**, **28 share/showcase checks**, **26 screenshot
+layout/axe checks**, **14 release checks** and eight DEM landmark assertions.
+Screenshot generation also passes independently. Actual desktop/mobile EN/AS
+pixels, social preview, portrait/landscape exports and every showcase frame were
+inspected. The README GIF contains **34 captured frames and 27 encoded frames**.
+
+The owner approved v0.3.0 publication. The exact merge commit must deploy
+successfully and pass public Pages checks before its annotated tag and GitHub
+release are created. Physical-device performance/gestures, manual screen readers,
+native-speaker Assamese and social-platform cache previews remain unverified;
+existing decorative contrast exceptions and bundle warnings remain disclosed.

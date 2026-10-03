@@ -3,7 +3,7 @@ import argparse
 import base64
 import io
 from pathlib import Path
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageDraw
 from playwright.sync_api import sync_playwright, expect
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -50,6 +50,18 @@ with sync_playwright() as p:
         page.get_by_label('Compare dry terrain / scenario',exact=True).check()
         page.wait_for_timeout(500)
         split = Image.open(io.BytesIO(canvas.screenshot())).convert('RGB')
+        # Element screenshots include overlapping DOM labels. Mask only those
+        # measured HUD rectangles, leaving the actual terrain/water comparison.
+        bounds = canvas.bounding_box()
+        scale = wet.width / bounds['width']
+        for label in page.locator('.comparison-labels span').all():
+            box = label.bounding_box()
+            rectangle = (round((box['x']-bounds['x']-2)*scale),
+                         round((box['y']-bounds['y']-2)*scale),
+                         round((box['x']+box['width']-bounds['x']+2)*scale),
+                         round((box['y']+box['height']-bounds['y']+2)*scale))
+            for image in [wet,split]:
+                ImageDraw.Draw(image).rectangle(rectangle,fill=(0,0,0))
         # Exclude the 44 CSS pixel split handle and hairline. Both passes must use exactly the same camera.
         w,h = wet.size
         assert ImageChops.difference(wet.crop((0,0,w//2-64,h)),split.crop((0,0,w//2-64,h))).getbbox()

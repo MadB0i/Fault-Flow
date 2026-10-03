@@ -18,6 +18,7 @@ import {
   Rotate3D,
   BookOpen,
   X,
+  Play,
 } from 'lucide-react';
 import { ATLAS_COPY } from '../shared/i18n/atlas.js';
 import { FLOOD_HISTORY } from '../shared/flood-history.js';
@@ -46,6 +47,8 @@ import { createAtlasStory, downloadImage, saveAtlasImage } from './saveAtlasImag
 import FlowSection from './FlowSection.js';
 import { DistrictStory, EventRecord } from './ExplorationPanels.js';
 import { recordPortraitVideo, canRecordPortraitVideo } from './recordPortraitVideo.js';
+import { useShowcase } from './useShowcase.js';
+import ShowcasePanel from './ShowcasePanel.js';
 
 const major = catalogue.events.reduce((a, b) => (a.magnitude > b.magnitude ? a : b));
 export default function App() {
@@ -65,9 +68,11 @@ export default function App() {
     | 'district-story'
     | 'event'
     | 'share'
+    | 'showcase'
     | null
   >(null);
   const [focus, setFocus] = useState(false);
+  const [returnShowcaseFocus, setReturnShowcaseFocus] = useState(false);
   const [level, setLevel] = useState(initialScene.level);
   const [inflow, setInflow] = useState(initialScene.inflow);
   const [historyPlaying, setHistoryPlaying] = useState(false);
@@ -77,6 +82,7 @@ export default function App() {
   const [districtSearch, setDistrictSearch] = useState('');
   const [shareLink, setShareLink] = useState('');
   const [storyImage, setStoryImage] = useState('');
+  const [shareFormat, setShareFormat] = useState<'portrait' | 'landscape'>('portrait');
   const [storyBusy, setStoryBusy] = useState(false);
   const [tour, setTour] = useState<number | null>(null);
   const [recording, setRecording] = useState(false);
@@ -108,6 +114,33 @@ export default function App() {
     : null;
   const sidecar = view.state.status.phase === 'ready' ? view.state.status.sidecar : null;
   const mode = atlas.mode;
+  const showcase = useShowcase({
+    view,
+    atlas,
+    setAtlas,
+    level,
+    inflow,
+    reduced: !!reduced,
+    onBegin: () => {
+      setDrawer(null);
+      setTour(null);
+      setHistoryPlaying(false);
+      setCollisionPlaying(false);
+      setFocus(true);
+    },
+    onExit: () => {
+      setFocus(false);
+      setReturnShowcaseFocus(true);
+    },
+  });
+  useEffect(() => {
+    if (!returnShowcaseFocus || !ready || drawer || showcase.active) return;
+    const frame = requestAnimationFrame(() => {
+      document.querySelector<HTMLButtonElement>('.showcase-launch')?.focus();
+      setReturnShowcaseFocus(false);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [returnShowcaseFocus, ready, drawer, showcase.active]);
   useEffect(() => {
     if (!view.pickedQuake) return;
     setHistoryPlaying(false);
@@ -198,6 +231,7 @@ export default function App() {
     return () => document.removeEventListener('visibilitychange', onHidden);
   }, [view.setWaterPlaying]);
   const setMode = (next: Mode) => {
+    if (showcase.active) showcase.stop(false);
     if (next === mode) return;
     view.setWaterOn(false);
     setHistoryPlaying(false);
@@ -264,6 +298,7 @@ export default function App() {
     }
   };
   const openShare = () => {
+    setShareFormat('portrait');
     setShareLink(
       createViewLink(
         location.href,
@@ -279,6 +314,7 @@ export default function App() {
     if (drawer !== 'share') return;
     let cancelled = false;
     setStoryBusy(true);
+    setStoryImage('');
     let png: string | null = null;
     try {
       png = view.captureImage();
@@ -290,23 +326,29 @@ export default function App() {
       setStoryBusy(false);
       return;
     }
-    void createAtlasStory(png, mode, copy, {
-      title:
-        districtName ??
-        (view.areaId === 'majuli'
-          ? copy.majuli
-          : view.areaId === 'sadiya-dibrugarh'
-            ? copy.sadiya
-            : copy.overview),
-      attribution: sidecar?.attribution ?? '',
-      note:
-        mode === 'flow'
-          ? `${copy.level}: ${level.toFixed(1)} m · ${copy.inflowSettings}: ${inflow} m³/s · ${view.waterOn ? copy.scenario : copy.scenarioNotRun}${atlas.flowView === 'depth' ? ` · ${copy.depthExport}` : ''}${atlas.comparison && view.waterOn ? ` · ${copy.dryTerrain} | ${copy.chosenWater}` : ''}`
-          : mode === 'fault'
-            ? `${copy.year}: ${atlas.quakeYear} · ${copy.snapshot} ${CATALOGUE_CUTOFF} UTC · ${copy.magnitudeScale}: ${copy.magnitudeSmall} / ${copy.magnitudeMedium} / ${copy.magnitudeLarge}. ${copy.magnitudeHint}.`
-            : copy.platesNote,
-      height: `${copy.height}: ${view.exaggeration}×`,
-    })
+    void createAtlasStory(
+      png,
+      mode,
+      copy,
+      {
+        title:
+          districtName ??
+          (view.areaId === 'majuli'
+            ? copy.majuli
+            : view.areaId === 'sadiya-dibrugarh'
+              ? copy.sadiya
+              : copy.overview),
+        attribution: sidecar?.attribution ?? '',
+        note:
+          mode === 'flow'
+            ? `${copy.level}: ${level.toFixed(1)} m · ${copy.inflowSettings}: ${inflow} m³/s · ${view.waterOn ? copy.scenario : copy.scenarioNotRun}${atlas.flowView === 'depth' ? ` · ${copy.depthExport}` : ''}${atlas.comparison && view.waterOn ? ` · ${copy.dryTerrain} | ${copy.chosenWater}` : ''}`
+            : mode === 'fault'
+              ? `${copy.year}: ${atlas.quakeYear} · ${copy.snapshot} ${CATALOGUE_CUTOFF} UTC${selectedEvent && Number(selectedEvent.time.slice(0, 4)) <= atlas.quakeYear ? ` · ${selectedEvent.time.slice(0, 10)} · M ${selectedEvent.magnitude} ${selectedEvent.magnitudeType} · ${selectedEvent.depthKm} km` : ''}`
+              : copy.platesNote,
+        height: `${copy.height}: ${view.exaggeration}×`,
+      },
+      shareFormat,
+    )
       .then((image) => {
         if (!cancelled) setStoryImage(image);
       })
@@ -320,7 +362,7 @@ export default function App() {
       cancelled = true;
     };
     // Capture once when the share sheet opens; its preview and download match.
-  }, [drawer]);
+  }, [drawer, shareFormat]);
   const changeArea = (id: AreaId) => {
     setAtlas((a) => ({ ...a, selectedDistrict: null }));
     view.setArea(id);
@@ -373,9 +415,11 @@ export default function App() {
   return (
     <div
       className={`atlas-app${focus ? ' is-focused' : ''}`}
+      lang={locale}
       data-mode={mode}
       data-locale={locale}
       data-testid="app"
+      data-showcase={showcase.active ? showcase.stage : undefined}
     >
       <a className="skip-link sr-only" href="#main">
         {copy.skip}
@@ -409,8 +453,26 @@ export default function App() {
       </header>
       <main id="main" tabIndex={-1} className="atlas-map" data-testid="terrain-scene">
         <TerrainScene view={view} copy={copy} />
+        {showcase.active && (
+          <ShowcasePanel
+            showcase={showcase}
+            copy={copy}
+            reduced={!!reduced}
+            ready={showcase.sceneReady}
+            level={level}
+            year={atlas.quakeYear}
+            onExplore={() => {
+              showcase.stop(false);
+              requestAnimationFrame(() => setDrawer('districts'));
+            }}
+          />
+        )}
         {mode === 'flow' && atlas.comparison && view.waterOn && view.water?.supported && (
           <>
+            <div className="comparison-labels" aria-hidden="true">
+              <span>{copy.compareBefore}</span>
+              <span>{copy.compareAfter}</span>
+            </div>
             <div
               className="comparison-line"
               style={{ left: `${atlas.comparisonPosition * 100}%` }}
@@ -437,6 +499,19 @@ export default function App() {
         )}
         {!focus && (
           <div className="atlas-discovery">
+            {mode !== 'plates' && (
+              <button
+                className="showcase-launch"
+                type="button"
+                aria-label={copy.showcase}
+                title={copy.showcase}
+                disabled={!ready || recording}
+                onClick={() => setDrawer('showcase')}
+              >
+                <Play {...icon} />
+                <span>{copy.showcase}</span>
+              </button>
+            )}
             {mode !== 'plates' && (
               <button
                 className="district-launch"
@@ -781,17 +856,19 @@ export default function App() {
             ? copy.sources
             : drawer === 'safety'
               ? copy.safetyTitle
-              : drawer === 'history'
-                ? copy.floodHistory
-                : drawer === 'districts'
-                  ? copy.districtExplore
-                  : drawer === 'district-story'
-                    ? (districtName ?? copy.districtStory)
-                    : drawer === 'event'
-                      ? copy.event
-                      : drawer === 'share'
-                        ? copy.share
-                        : copy.controls
+              : drawer === 'showcase'
+                ? copy.showcaseTitle
+                : drawer === 'history'
+                  ? copy.floodHistory
+                  : drawer === 'districts'
+                    ? copy.districtExplore
+                    : drawer === 'district-story'
+                      ? (districtName ?? copy.districtStory)
+                      : drawer === 'event'
+                        ? copy.event
+                        : drawer === 'share'
+                          ? copy.share
+                          : copy.controls
         }
         closeLabel={copy.close}
       >
@@ -881,11 +958,58 @@ export default function App() {
             </a>
           </>
         )}
+        {drawer === 'showcase' && (
+          <>
+            <p>{copy.showcaseNote}</p>
+            <label htmlFor="showcase-level">{copy.level}</label>
+            <div className="showcase-settings">
+              <input
+                id="showcase-level"
+                type="range"
+                min="0"
+                max="8"
+                step="0.5"
+                value={level}
+                onChange={(e) => setLevel(Number(e.target.value))}
+              />
+              <output htmlFor="showcase-level">{level.toFixed(1)} m</output>
+            </div>
+            <p className="fine-print">
+              {copy.inflowSettings}: {inflow} m³/s · {copy.scenarioNote}
+            </p>
+            <p>{copy.noPrediction}</p>
+            {reduced && <p>{copy.showcaseReduced}</p>}
+            <button
+              type="button"
+              className="primary-button"
+              disabled={!ready}
+              onClick={showcase.start}
+            >
+              <Play {...icon} />
+              {copy.showcaseStart}
+            </button>
+          </>
+        )}
         {drawer === 'share' && (
           <>
-            <div className="share-preview" aria-busy={storyBusy}>
+            <label htmlFor="share-format">{copy.share}</label>
+            <select
+              id="share-format"
+              value={shareFormat}
+              onChange={(e) => setShareFormat(e.target.value as 'portrait' | 'landscape')}
+            >
+              <option value="portrait">{copy.portraitFormat}</option>
+              <option value="landscape">{copy.landscapeFormat}</option>
+            </select>
+            <div
+              className={`share-preview${shareFormat === 'landscape' ? ' is-landscape' : ''}`}
+              aria-busy={storyBusy}
+            >
               {storyImage ? (
-                <img src={storyImage} alt={copy.storyAlt} />
+                <img
+                  src={storyImage}
+                  alt={shareFormat === 'portrait' ? copy.storyAlt : copy.socialAlt}
+                />
               ) : (
                 <p role="status">
                   {storyBusy ? copy.storyPreparing : copy.invalidCapture}
@@ -900,13 +1024,15 @@ export default function App() {
                 onClick={() => {
                   downloadImage(
                     storyImage,
-                    `fault-and-flow-${selectedDistrict?.name.toLowerCase() ?? mode}-story.png`,
+                    `fault-and-flow-${selectedDistrict?.name.toLowerCase() ?? mode}-${shareFormat === 'portrait' ? 'story' : 'social'}.png`,
                   );
-                  setNotice(copy.storySaved);
+                  setNotice(
+                    shareFormat === 'portrait' ? copy.storySaved : copy.socialSaved,
+                  );
                 }}
               >
                 <Download {...icon} />
-                {copy.saveStory}
+                {shareFormat === 'portrait' ? copy.saveStory : copy.saveSocial}
               </button>
               <button
                 className="text-button"
@@ -920,7 +1046,9 @@ export default function App() {
               <button
                 type="button"
                 className="text-button"
-                disabled={!storyImage || storyBusy || recording}
+                disabled={
+                  !storyImage || storyBusy || recording || shareFormat !== 'portrait'
+                }
                 onClick={() => void startVideo()}
               >
                 {copy.recordVideo}

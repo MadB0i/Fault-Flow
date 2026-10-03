@@ -31,6 +31,13 @@ def ready(page):
 def scan(page, label):
     overflow = page.evaluate("document.documentElement.scrollWidth > innerWidth")
     assert not overflow, label + ": horizontal overflow"
+    if page.viewport_size["width"] == 390 and page.locator(".flow-section").count():
+        canvas = page.get_by_test_id("terrain-canvas").bounding_box()
+        navigation = page.locator(".map-navigation").bounding_box()
+        section = page.locator(".flow-section").bounding_box()
+        assert navigation["y"] >= canvas["y"], label + ": navigation above map"
+        assert navigation["y"] + navigation["height"] <= canvas["y"] + canvas["height"], label + ": navigation outside map"
+        assert navigation["y"] + navigation["height"] <= section["y"], label + ": navigation covers section readouts"
     page.add_script_tag(path=str(ROOT / "node_modules/axe-core/axe.min.js"))
     results = page.evaluate("""async () => (await axe.run(document, {
         runOnly: {type: 'tag', values: ['wcag2a','wcag2aa','wcag21aa','wcag22aa']}
@@ -113,6 +120,10 @@ with sync_playwright() as p:
             page.get_by_test_id("scenario-play").click()
             page.get_by_test_id("scenario-play").click()
             page.get_by_role("button",name="Reset scenario",exact=True).click()
+            # Check the expanded state at capture time, after terrain/layout changes.
+            if page.locator('.dock-toggle').get_attribute('aria-expanded') != 'true':
+                page.get_by_role("button",name="Explore more",exact=True).click()
+            expect(page.locator('.dock-toggle')).to_have_attribute('aria-expanded','true')
             page.get_by_role("button",name="Depth bands",exact=True).click()
             page.get_by_role("button",name="River cross-section",exact=True).click()
             expect(page.get_by_test_id("section-depth")).to_contain_text("2.00 m")
