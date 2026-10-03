@@ -113,6 +113,10 @@ with sync_playwright() as p:
             page.get_by_test_id("scenario-play").click()
             page.get_by_test_id("scenario-play").click()
             page.get_by_role("button",name="Reset scenario",exact=True).click()
+            # Check the expanded state at capture time, after terrain/layout changes.
+            if page.locator('.dock-toggle').get_attribute('aria-expanded') != 'true':
+                page.get_by_role("button",name="Explore more",exact=True).click()
+            expect(page.locator('.dock-toggle')).to_have_attribute('aria-expanded','true')
             page.get_by_role("button",name="Depth bands",exact=True).click()
             page.get_by_role("button",name="River cross-section",exact=True).click()
             expect(page.get_by_test_id("section-depth")).to_contain_text("2.00 m")

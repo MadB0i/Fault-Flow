@@ -6,6 +6,10 @@ identity; the bottom dock holds the scenario or timeline action. The mobile layo
 keeps the map above its controls. Evidence is in `docs/screenshots/` at 1440 × 900
 and 390 × 844, with all three modes in both languages.
 
+The dated delivery notes below precede publication. v0.2.0 is now public on
+GitHub Pages; the current local follow-up is described in
+[Share readiness](SHARE_READINESS.md) and awaits approval before publication.
+
 ## Confirmed defects fixed
 
 - **P1 — artificial water creation:** clamped incoming flux at the simulation
@@ -223,3 +227,26 @@ physical-phone performance. Existing decorative terrain/deep-water contrast
 exceptions and build-size warnings remain documented; no palette adjustment was
 made in this pass. One transient browser execution-context/navigation interruption
 was followed by a clean full core-suite run with the application sources stable.
+
+## Share-readiness follow-up
+
+The audit found a vague opening, absent social metadata/icons, a full-height
+comparison line intersecting HUD content, no landscape card/return URL and stale
+deployment wording. The opening now identifies Assam's flood scenarios and
+recorded earthquake history. A deliberately optional engine-driven introduction
+provides a camera, water comparison and history sequence, with explicit chosen
+settings, pause/skip/replay and manual reduced-motion steps.
+
+Actual desktop/phone English and Assamese pixels show the comparison labels and
+handle clear of the introductory panel and map controls. The focus ring is on
+the thumb. Showcase panels sit above the divider; loading disables Next until
+the required terrain is prepared. Portrait and landscape cards preserve context,
+scientific limits, source attribution and the return URL; text bounds are measured
+in the real browser. Short landscape phones use a taller scrollable map so
+navigation does not obscure the earthquake heading.
+
+The existing fonts, tokens and engine contract remain. New metadata/icons and
+the preview are local assets pending deployment. The preview uses real terrain,
+a chosen 6 m water scenario and recorded history through 1950. Physical iPhone
+Safari/Android Chrome, manual assistive technology and native Assamese review
+remain pending; the explicit matrix is in the share-readiness document.

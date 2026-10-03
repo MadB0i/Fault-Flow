@@ -1,11 +1,11 @@
 # Fault & Flow
 
-### Explore Assam's earth and water.
+### An interactive 3D flood and earthquake atlas of Assam.
 
 **v0.2.0** · [Explore the live atlas](https://madb0i.github.io/Fault-and-Flow/) ·
 [Releases](https://github.com/MadB0i/Fault-and-Flow/releases)
 
-An interactive 3D educational atlas of the Brahmaputra valley. Choose a water
+Explore the Brahmaputra valley in real terrain. Choose a water
 scenario, explore recorded earthquakes, and find your district in real terrain.
 Browser only, with English and Assamese controls, self-hosted fonts and local
 image/video exports. No accounts, API keys, backend or telemetry.
@@ -25,9 +25,15 @@ or damage estimates.
 | **Earthquakes**      | Scrub documented USGS M5+ history on the Assam overview. Filter M5+/M6+/M7+, tap a grounded symbol, read its date, magnitude type and depth, focus its epicentre and open the original record. Colours describe magnitude, not local shaking.                                     |
 | **Why Assam shakes** | Open the secondary collision explainer from Earthquakes. Explore schematic plates, crustal layers and an explicitly invented miniature settlement. Choose illustration strength and replay the buildings' sway.                                                                   |
 | **Your district**    | Search all 35 names in the committed OSM extract. Focus its administration-centre anchor and explore the nearest five catalogue records, with approximate anchor-to-epicentre distances and regional historical flood-report links.                                               |
-| **Share**            | Preview an attributed 1080 × 1920 portrait PNG or save the full map. Record up to eight seconds of silent 720 × 1280 WebM with labels and credits. Share validated view links; they never automatically run water.                                                                |
+| **Share**            | Preview attributed portrait (1080 × 1920) or landscape (1200 × 630) PNGs, or save the full map. Record up to eight seconds of silent 720 × 1280 WebM with labels and credits. Share validated view links; they never automatically run water.                                     |
 
-An optional three-step tour follows your pace. Compact controls keep Play on the
+**Watch showcase** is an optional 13-second introduction: Assam → Brahmaputra →
+your chosen water scenario → dry/scenario comparison → recorded earthquake
+history. Terrain loading can add time. Pause, skip or replay; reduced motion uses
+manual Next steps. It never auto-plays, including on returning visits. Starting
+it resets the camera and water run, explained before playback.
+
+An optional three-step tour also follows your pace. Compact controls keep Play on the
 first phone screen; Explore more opens details. Lite reduces display pixel
 resolution on high-density screens, keeping the same data and water solver.
 
@@ -78,6 +84,10 @@ For video, start scenario/history playback, open Share, then choose
 **Record 8-second portrait video**. Recording stays local and uses no camera or
 microphone. The portrait is a labelled central crop, not the full viewport.
 Fixed labels identify the context at recording start.
+Share also offers a **1200 × 630 landscape PNG** with context, credits, educational
+limits and the atlas URL. The 1080 × 1920 portrait includes the same return URL.
+Landscape PNGs contain the full map; portrait images/videos use a central crop.
+WebM support depends on the browser; universal MP4 export is not offered.
 
 ## Data and scientific limits
 
@@ -148,12 +158,17 @@ GIF encoding also use Pillow. Reuse an existing Chromium executable:
 ```bash
 python scripts/test-release.py --browser /path/to/chromium
 python scripts/capture-release.py --browser /path/to/chromium
+python scripts/capture-social.py --browser /path/to/chromium
 ```
 
 Run Vite first. Both scripts accept `--url`. The npm runner uses its configured
 Chromium executable. Temporary outputs stay in `.cache/` on the project drive.
 The GIF uses real browser frames and a shared palette. Every committed asset
 must stay below 5 MB.
+
+[Share-readiness audit and physical-device checklist](docs/SHARE_READINESS.md)
+records what is automated and what still needs hands-on review. The social image
+uses real app captures.
 
 ## Licence and attribution
 

@@ -629,3 +629,21 @@ runs water. Portrait video uses the host-owned canvas capture stream and a local
 720 × 1280 WebM for up to eight seconds, labels the context at recording start,
 and releases all tracks, timers and animation frames on finish/error. Hidden-tab
 recording ends early. No camera, microphone, remote codec or upload is involved.
+
+### Optional showcase and landscape cards
+
+`useShowcase` orchestrates the existing typed camera, area, water and atlas API;
+it never accesses Three.js internals. `shared/showcase.ts` is a headless timeline
+with record selection from the bundled catalogue. Its 13-second animation clock
+waits for terrain readiness, pauses when hidden, and offers explicit pause/skip.
+Reduced motion uses manual steps and paused water. It never auto-starts from URL
+parameters or returning visits. Starting explains the camera/water reset; skipping
+restores presentation and area, not an elapsed solver snapshot. Replay retains
+the original exit destination. Browser-history navigation exits the sequence.
+
+Landscape PNGs use a contained full-viewport capture at 1200 × 630; portrait
+images/video retain their labelled central crop. Context, educational limits,
+dataset credits and the canonical URL remain in the local composition. Video
+keeps its existing 720 × 1280 WebM/browser support checks. Static social metadata
+points to an attributed 1200 × 630 real-render PNG; icon paths use Vite's base URL
+so GitHub Pages subpath deployment works. The engine API is unchanged.

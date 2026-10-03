@@ -1086,3 +1086,11 @@ Release screenshots and the demo GIF are captures of the app. The GIF carries
 educational wording and source credits; the README retains the full adapted
 Copernicus DEM attribution. Recording frames are genuine browser renders; chosen
 scenario inputs and synthetic motion are never represented as measurements.
+
+The static `public/social-preview.png` and new landscape cards are also rendered
+derivatives of these same documented layers. `scripts/capture-social.py` captures
+a chosen Majuli 6 m scenario and the recorded catalogue through 1950, contains the
+FLOW viewport and crops the FAULT viewport for composition. Credits remain baked
+into the card. No new scientific dataset or generative disaster imagery was added;
+Copernicus, Natural Earth, USGS and OSM attribution/terms above still apply.
+App icons are original vector artwork rendered to PNG, not geographic data.

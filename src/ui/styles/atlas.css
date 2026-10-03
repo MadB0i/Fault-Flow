@@ -1460,8 +1460,8 @@
 }
 .comparison-line {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: calc(var(--space-2xl) * 2);
+  bottom: calc(var(--space-2xl) * 3);
   border-left: var(--border);
   border-color: var(--water-shoreline);
   pointer-events: none;
@@ -1611,4 +1611,216 @@
   background: var(--surface);
   pointer-events: auto;
   cursor: col-resize;
+}
+
+/* Keep the focus ring on the thumb, not a viewport-wide horizontal strip. */
+.comparison-map-slider:focus-visible {
+  outline: none;
+}
+.comparison-map-slider:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--water);
+  outline-offset: 2px;
+}
+.comparison-map-slider:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--water);
+  outline-offset: 2px;
+}
+.comparison-labels {
+  position: absolute;
+  top: calc(var(--space-2xl) * 2);
+  left: var(--space-l);
+  right: var(--space-l);
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  font-family: var(--font-data);
+  font-size: var(--step--2);
+  color: var(--text);
+}
+.comparison-labels span {
+  background: var(--surface);
+  padding: var(--space-xs);
+  border: var(--border);
+  border-radius: var(--radius);
+}
+.showcase-launch {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-height: var(--control-size);
+  padding: var(--space-xs) var(--space-s);
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: var(--step--1);
+  color: var(--accent);
+}
+.share-preview.is-landscape {
+  min-height: 0;
+  aspect-ratio: 1200 / 630;
+  width: 100%;
+  max-height: none;
+}
+.share-preview.is-landscape img {
+  aspect-ratio: 1200 / 630;
+}
+.showcase-settings {
+  display: flex;
+  align-items: center;
+  gap: var(--space-s);
+}
+.showcase-settings input {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--water);
+  min-height: var(--control-size);
+}
+.showcase-settings output {
+  font-family: var(--font-data);
+}
+.showcase-heading {
+  position: absolute;
+  top: var(--space-m);
+  left: var(--space-l);
+  right: var(--space-l);
+  pointer-events: none;
+}
+.showcase-heading h2 {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  font-weight: 400;
+}
+.showcase-heading > p:last-child {
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+.showcase-panel {
+  z-index: 2;
+  position: absolute;
+  left: var(--space-l);
+  right: var(--space-l);
+  bottom: var(--space-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-l);
+  padding: var(--space-s);
+  background: var(--surface);
+  border: var(--border);
+  border-radius: var(--radius);
+}
+.showcase-stage {
+  flex: 1;
+  min-width: 0;
+}
+.showcase-stage strong {
+  color: var(--accent);
+  font-size: var(--step-0);
+}
+.showcase-stage p {
+  font-size: var(--step--1);
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+}
+.showcase-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+[data-showcase] .atlas-intro,
+[data-showcase] .atlas-discovery,
+[data-showcase] .map-tools,
+[data-showcase] .map-navigation,
+[data-showcase] .magnitude-legend,
+[data-showcase] .region-selector {
+  display: none;
+}
+[data-showcase] .comparison-line {
+  top: calc(var(--space-2xl) * 2);
+  bottom: calc(var(--space-2xl) * 2);
+}
+@media (max-width: 47.99rem) {
+  .showcase-launch {
+    padding: var(--space-xs);
+    min-width: var(--control-size);
+  }
+  .showcase-launch span {
+    display: none;
+  }
+  [data-mode='flow'] .atlas-intro .intro-copy {
+    display: block;
+    max-width: var(--atlas-mobile-title);
+  }
+  .comparison-labels {
+    left: var(--space-s);
+    right: var(--space-s);
+    top: calc(var(--space-2xl) * 2 + var(--space-xl));
+  }
+  .comparison-labels span {
+    padding: var(--space-2xs);
+  }
+  .comparison-line {
+    top: calc(var(--space-2xl) * 2 + var(--space-xl));
+    bottom: calc(var(--space-2xl) * 3);
+  }
+  .showcase-heading {
+    left: var(--space-s);
+    right: var(--space-s);
+  }
+  .showcase-heading h2 {
+    font-size: var(--step-3);
+  }
+  .showcase-panel {
+    left: var(--space-s);
+    right: var(--space-s);
+    bottom: var(--space-xl);
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-s);
+  }
+  .showcase-stage strong {
+    font-size: var(--step--1);
+  }
+  .showcase-stage p {
+    font-size: var(--step--2);
+  }
+}
+
+/* A rotated phone remains a scrollable atlas rather than a clipped desktop. */
+@media (max-height: 32rem) and (orientation: landscape) {
+  .atlas-app {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+  .atlas-map {
+    flex: none;
+    height: max(24rem, 80svh);
+  }
+  [data-showcase] .atlas-map {
+    height: max(18rem, 72svh);
+  }
+  .showcase-panel {
+    bottom: var(--space-s);
+    left: var(--space-s);
+    right: var(--space-s);
+    padding: var(--space-xs);
+    gap: var(--space-s);
+    flex-direction: row;
+  }
+  .showcase-heading h2 {
+    font-size: var(--step-2);
+  }
+  .showcase-heading .eyebrow {
+    display: none;
+  }
+  .showcase-stage strong {
+    font-size: var(--step--1);
+  }
+  .showcase-stage p {
+    font-size: var(--step--2);
+  }
+  .atlas-footer {
+    flex-wrap: wrap;
+  }
 }
