@@ -6,9 +6,10 @@ identity; the bottom dock holds the scenario or timeline action. The mobile layo
 keeps the map above its controls. Evidence is in `docs/screenshots/` at 1440 × 900
 and 390 × 844, with all three modes in both languages.
 
-The dated delivery notes below precede publication. v0.2.0 is now public on
-GitHub Pages; the current local follow-up is described in
-[Share readiness](SHARE_READINESS.md) and awaits approval before publication.
+Current release: **v0.3.0**, approved on 2026-10-04 from corrected candidate
+`1dff130`. The dated delivery notes below preserve the historical v0.2.0 review.
+[Share readiness](SHARE_READINESS.md) records current verification and the
+required public deployment checks before tagging and publication.
 
 ## Confirmed defects fixed
 
@@ -245,8 +246,25 @@ scientific limits, source attribution and the return URL; text bounds are measur
 in the real browser. Short landscape phones use a taller scrollable map so
 navigation does not obscure the earthquake heading.
 
-The existing fonts, tokens and engine contract remain. New metadata/icons and
-the preview are local assets pending deployment. The preview uses real terrain,
+The existing fonts, tokens and engine contract remain. At the 2026-10-03 review,
+new metadata/icons and the preview were local assets pending deployment. The preview uses real terrain,
 a chosen 6 m water scenario and recorded history through 1950. Physical iPhone
 Safari/Android Chrome, manual assistive technology and native Assamese review
 remain pending; the explicit matrix is in the share-readiness document.
+
+## v0.3.0 release-candidate audit — 2026-10-04
+
+Corrected candidate `1dff130` fixes production preview base paths, mobile
+depth/navigation overlap and Assamese root semantics. No redesign or additional
+feature was included in these fixes. Verification passes **183 unit tests across
+19 files**, **64 core browser checks**, **28 share/showcase checks**, **26 screenshot
+layout/axe checks**, **14 release checks** and eight DEM landmark assertions.
+Screenshot generation also passes independently. Actual desktop/mobile EN/AS
+pixels, social preview, portrait/landscape exports and every showcase frame were
+inspected. The README GIF contains **34 captured frames and 27 encoded frames**.
+
+The owner approved v0.3.0 publication. The exact merge commit must deploy
+successfully and pass public Pages checks before its annotated tag and GitHub
+release are created. Physical-device performance/gestures, manual screen readers,
+native-speaker Assamese and social-platform cache previews remain unverified;
+existing decorative contrast exceptions and bundle warnings remain disclosed.

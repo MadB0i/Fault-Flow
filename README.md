@@ -2,7 +2,7 @@
 
 ### An interactive 3D flood and earthquake atlas of Assam.
 
-**v0.2.0** · [Explore the live atlas](https://madb0i.github.io/Fault-and-Flow/) ·
+**v0.3.0** · [Explore the live atlas](https://madb0i.github.io/Fault-and-Flow/) ·
 [Releases](https://github.com/MadB0i/Fault-and-Flow/releases)
 
 Explore the Brahmaputra valley in real terrain. Choose a water
@@ -165,6 +165,13 @@ Run Vite first. Both scripts accept `--url`. The npm runner uses its configured
 Chromium executable. Temporary outputs stay in `.cache/` on the project drive.
 The GIF uses real browser frames and a shared palette. Every committed asset
 must stay below 5 MB.
+
+The v0.3.0 candidate passes **183 unit tests across 19 files**, **64 core browser
+checks**, **28 share/showcase checks**, **26 screenshot layout/axe checks** and
+**14 release checks**. The README GIF has **34 captured frames and 27 encoded
+frames**; it is separate from the optional 13-second showcase. Physical-device,
+manual assistive-technology, native-speaker Assamese and social-cache reviews
+remain pending, as detailed in the audit below.
 
 [Share-readiness audit and physical-device checklist](docs/SHARE_READINESS.md)
 records what is automated and what still needs hands-on review. The social image

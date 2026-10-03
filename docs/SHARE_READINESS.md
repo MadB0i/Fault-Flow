@@ -1,8 +1,15 @@
 # Share-readiness review — 2026-10-03
 
-v0.2.0 is public on [GitHub Pages](https://madb0i.github.io/Fault-and-Flow/).
-This follow-up is a local change awaiting explicit approval before push, tag or
-release. New social assets are ready locally; they are not yet at their public URL.
+Current release: **v0.3.0**. The owner approved publication on 2026-10-04 from
+corrected candidate `1dff130`. Publication requires a successful Pages deployment
+of the exact merge commit and verification of the real public app before tagging.
+See [deployment runs](https://github.com/MadB0i/Fault-and-Flow/actions/workflows/deploy.yml)
+and [releases](https://github.com/MadB0i/Fault-and-Flow/releases) for delivery status.
+
+Historical context: v0.2.0 was public on
+[GitHub Pages](https://madb0i.github.io/Fault-and-Flow/) during the 2026-10-03
+share-readiness review. This follow-up and its new social assets were initially
+local changes awaiting approval.
 
 ## Audit and changes
 
@@ -59,7 +66,9 @@ must stay below 5 MB.
 
 ## Verification results
 
-`npm run verify` passes formatting, lint, types, **180 unit tests across 18 files**
+The 2026-10-04 audit of `1dff130` confirmed the smallest fixes for production
+preview base paths, mobile depth/navigation overlap and Assamese root semantics.
+`npm run verify` passes formatting, lint, types, **183 unit tests across 19 files**
 and the production build. Browser gates pass **64 core checks**, **28 new
 share/showcase checks**, **26 screenshot layout/axe checks** and **14 existing
 release checks**, including actual changing WebM frames and unsupported-browser
@@ -77,12 +86,18 @@ difference checks. The unchanged contrast report has **28 passing pairs and two
 previously accepted render-fill exceptions**, described below. The production
 build retains its existing chunk-size warnings; no performance guarantee is made.
 
-The real-browser GIF was refreshed: **34 frames, 579,602 bytes**. The social
+The real-browser GIF has **34 captured frames, 27 encoded frames, 579,602 bytes**.
+It is a separate 7.48-second README demo, not the 13-second showcase. The social
 preview is **1200 × 630, 349,298 bytes**. Actual 1440px/390px EN/AS pixels, landscape
 exports, rotated-phone layout and showcase scenes were inspected. Local
-documentation links resolve; the existing Pages URL returns HTTP 200 and the
-v0.2.0 release/About/topics match the product. Public metadata/image delivery
-awaits approved deployment.
+documentation links resolve; the historical v0.2.0 release/About/topics matched
+the product. DEM checks pass all eight landmark-containment assertions. Production
+preview checks pass default, shared Assamese FLOW, historical FAULT and invalid
+input reloads without forced playback or asset errors. Continuous desktop/mobile
+recordings were inspected frame by frame through all seven showcase stages;
+the animation clock is 13 seconds, with loading and slow rendering adding time.
+Public metadata, assets, direct links and catalogue cutoff are mandatory delivery
+checks before the v0.3.0 tag and release are published.
 
 ## Physical/manual matrix — not run in this pass
 
@@ -110,5 +125,6 @@ erosion model, forecast or local hazard map is claimed.
 
 The palette is unchanged. The contrast tool's existing terrain-low 1.58:1 and
 deep-water 2.50:1 render-fill exceptions remain documented in `DECISIONS.md` §1
-and `DESIGN.md`; HUD text uses the passing palette. Asset delivery and social
-platform cache previews must be checked at the public URL after approved deployment.
+and `DESIGN.md`; HUD text uses the passing palette. Public asset delivery is a
+release gate after deployment. Social-platform cache previews remain a manual
+check after publication.

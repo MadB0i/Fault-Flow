@@ -312,6 +312,27 @@ work.
 
 The subsequent local pass adds canonical/social metadata, app icons, a real-render
 preview, an optional engine-driven showcase, a landscape share card and mobile
-rotation checks. These changes await owner approval before a push, tag or release.
+rotation checks. At this dated review, these changes awaited owner approval before
+a push, tag or release.
 See [share readiness](SHARE_READINESS.md). The scientific and physical-device
 gaps listed above remain open.
+
+## Current release — v0.3.0
+
+Publication was approved on 2026-10-04 from corrected candidate `1dff130`.
+The optional Assam → chosen water scenario → recorded earthquake showcase,
+portrait/landscape cards, social preview, comparison/mobile/bilingual improvements
+and production preview/depth/Assamese semantics fixes are included. This remains
+an educational sandbox, not a forecast, hazard map or prediction tool.
+
+The candidate passes **183 unit tests across 19 files**, **64 core browser checks**,
+**28 share/showcase checks**, **26 screenshot layout/axe checks**, **14 release
+checks** and eight DEM landmark assertions. The README GIF has **34 captured
+frames and 27 encoded frames**. See [share readiness](SHARE_READINESS.md) for the
+audit and remaining physical-device, assistive-technology, Assamese and
+social-cache checks. Historical v0.2.0 notes above remain unchanged in meaning.
+
+Release delivery requires a successful exact-merge Pages deployment and public
+app/asset/direct-link verification before tagging and publication. Delivery
+status is recorded in [Actions](https://github.com/MadB0i/Fault-and-Flow/actions/workflows/deploy.yml)
+and [GitHub releases](https://github.com/MadB0i/Fault-and-Flow/releases).
